@@ -42,6 +42,9 @@ class FighterAnimation:
     def get_next_frame(self):
         key = f'{self.name}_{self.action}'
         frames = self.get_key_from_cache(key)
+        if not frames:
+            self.set_cache()
+            frames = self.get_key_from_cache(key)
         if self.frame_index < len(frames):
             frame = frames[self.frame_index]
             self.frame_index += 1
@@ -119,7 +122,7 @@ class Fighter(FighterAnimation):
         self.potions = self.start_potions
         self.hp = self.max_hp
         self.frame_index = 0
-        self.action = 0
+        self.action = "Idle"
         self.update_time = pygame.time.get_ticks()
 
     def create_health_bar(self, x, y):

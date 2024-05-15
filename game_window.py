@@ -10,16 +10,6 @@ VICTORY = 1
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 
-# Load images
-background_img = None
-panel_img = None
-potion_img = None
-restart_img = None
-victory_img = None
-defeat_img = None
-sword_img = None
-
-font = None
 
 class MainGameGraphic:
     def __init__(self):
@@ -46,17 +36,15 @@ class MainGameGraphic:
         pygame.display.set_caption('Battle')
 
     def load_images(self):
-        global background_img, panel_img, potion_img, restart_img, victory_img, defeat_img, sword_img
-        background_img = pygame.image.load('img/Background/background.png').convert_alpha()
-        panel_img = pygame.image.load('img/Icons/panel.png').convert_alpha()
-        potion_img = pygame.image.load('img/Icons/potion.png').convert_alpha()
-        restart_img = pygame.image.load('img/Icons/restart.png').convert_alpha()
-        victory_img = pygame.image.load('img/Icons/victory.png').convert_alpha()
-        defeat_img = pygame.image.load('img/Icons/defeat.png').convert_alpha()
-        sword_img = pygame.image.load('img/Icons/sword.png').convert_alpha()
+        self.background_img = pygame.image.load('img/Background/background.png').convert_alpha()
+        self.panel_img = pygame.image.load('img/Icons/panel.png').convert_alpha()
+        self.potion_img = pygame.image.load('img/Icons/potion.png').convert_alpha()
+        self.restart_img = pygame.image.load('img/Icons/restart.png').convert_alpha()
+        self.victory_img = pygame.image.load('img/Icons/victory.png').convert_alpha()
+        self.defeat_img = pygame.image.load('img/Icons/defeat.png').convert_alpha()
+        self.sword_img = pygame.image.load('img/Icons/sword.png').convert_alpha()
 
-        global font
-        font = pygame.font.SysFont('Times New Roman', 26)
+        self.font = pygame.font.SysFont('Times New Roman', 26)
 
     def create_characters(self):
         position_y = self.screen_height - self.bottom_panel + 40
@@ -68,8 +56,8 @@ class MainGameGraphic:
         ]
         self.characters_list = self.opponents_list + [self.knight]
         for index, opponent in enumerate(self.opponents_list):
-            opponent.create_health_bar(550, position_y + (60*index))
-    
+            opponent.create_health_bar(550, position_y + (60 * index))
+
     def draw_healthbar(self):
         for characther in self.characters_list:
             characther.draw_health_bar()
@@ -85,21 +73,24 @@ class MainGameGraphic:
         self.draw_damage_text()
 
     def draw_bg(self):
-        self.screen.blit(background_img, (0, 0))
+        self.screen.blit(self.background_img, (0, 0))
 
     def draw_panel(self):
-        self.screen.blit(panel_img, (0, self.screen_height - self.bottom_panel))
-        self.draw_text(f'{self.knight.name} HP: {self.knight.hp}', font, RED, 100, self.screen_height - self.bottom_panel + 10)
+        self.screen.blit(self.panel_img, (0, self.screen_height - self.bottom_panel))
+        self.draw_text(f'{self.knight.name} HP: {self.knight.hp}', self.font, RED, 100,
+                       self.screen_height - self.bottom_panel + 10)
         for count, i in enumerate(self.opponents_list):
-            self.draw_text(f'{i.name} HP: {i.hp}', font, RED, 550,  (self.screen_height - self.bottom_panel + 10 + count * 60))
+            self.draw_text(f'{i.name} HP: {i.hp}', self.font, RED, 550,
+                           (self.screen_height - self.bottom_panel + 10 + count * 60))
 
     def draw_text(self, text, text_font, text_col, x, y):
         img = text_font.render(text, True, text_col)
         self.screen.blit(img, (x, y))
 
     def create_buttons(self):
-        self.restart_button = button.Button(self.screen, 350, 120, restart_img, 120, 30)
-        self.potion_button = button.Button(self.screen, 100, self.screen_height - self.bottom_panel + 70, potion_img, 64, 64)
+        self.restart_button = button.Button(self.screen, 350, 120, self.restart_img, 120, 30)
+        self.potion_button = button.Button(self.screen, 100, self.screen_height - self.bottom_panel + 70, self.potion_img,
+                                           64, 64)
 
     def draw_damage_text(self):
         damage_text_group.update()
@@ -109,7 +100,8 @@ class MainGameGraphic:
         potion = False
         if self.potion_button.draw():
             potion = True
-        self.draw_text(str(self.knight.potions), font, RED, 150, self.screen_height - self.bottom_panel + 70)
+        self.draw_text(
+            str(self.knight.potions), self.font, RED, 150, self.screen_height - self.bottom_panel + 70)
         return potion
 
     def set_cursor(self):
@@ -117,7 +109,7 @@ class MainGameGraphic:
         if collide_opponent:
             if pygame.mouse.get_visible():
                 pygame.mouse.set_visible(False)
-            self.screen.blit(sword_img, pygame.mouse.get_pos())
+            self.screen.blit(self.sword_img, pygame.mouse.get_pos())
             if self.clicked and collide_opponent and collide_opponent.alive:
                 self.attack = True
                 self.target = collide_opponent
@@ -129,18 +121,13 @@ class MainGameGraphic:
             if opponent.rect.collidepoint(pygame.mouse.get_pos()) and opponent.alive:
                 return opponent
 
-    def reset_characters(self):
-        for character in self.characters_list:
-            character.reset()
-        self.set_default()
-
     def load_characters(self):
         for character in self.characters_list:
             character.animate()
 
 
 class Game(MainGameGraphic):
-    
+
     def run_game(self):
         while game.running:
             game.run()
@@ -175,9 +162,9 @@ class Game(MainGameGraphic):
     def check_game_status(self):
         if self.game_status != RUNNING:
             if self.game_status == VICTORY:
-                self.screen.blit(victory_img, (275, 50))
+                self.screen.blit(self.victory_img, (275, 50))
             if self.game_status == DEFEATED:
-                self.screen.blit(defeat_img, (290, 50))
+                self.screen.blit(self.defeat_img, (290, 50))
             if self.restart_button.draw():
                 self.reset_characters()
                 self.game_status = RUNNING
@@ -186,7 +173,7 @@ class Game(MainGameGraphic):
         if self.knight.alive and self.ai_index > len(self.opponents_list):
             if self.attack and self.target:
                 self.knight.attack(self.target)
-            elif self.check_potions() and (self.knight.max_hp - self.knight.hp) > 0:
+            elif self.knight.potions > 0 and self.check_potions() and (self.knight.max_hp - self.knight.hp) > 0:
                 self.knight.use_potion()
             else:
                 return
@@ -213,6 +200,12 @@ class Game(MainGameGraphic):
                 self.ai_index += 1
         else:
             self.game_status = VICTORY
+
+    def reset_characters(self):
+        for character in self.characters_list:
+            character.reset()
+        self.set_default()
+        self.ai_index = 99999
 
 
 game = Game()
