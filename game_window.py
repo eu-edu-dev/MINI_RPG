@@ -48,10 +48,10 @@ class MainGameGraphic:
 
     def create_characters(self):
         position_y = self.screen_height - self.bottom_panel + 40
-        self.knight = Fighter(200, 260, 'Knight', 40, 10, 3, self.screen)
+        self.knight = Fighter(200, 260, 'Knight', 40, 10, 3, self.screen, width=300, heigth=300)
         self.knight.create_health_bar(100, position_y)
         self.opponents_list = [
-            Fighter(550, 250, 'Martial Hero 2', 20, 6, 1, self.screen, True),
+            Fighter(550, 284, 'Skeleton', 20, 6, 1, self.screen, True, width=120, height=120),
             # Fighter(600, 270, 'Bandit', 20, 6, 1, self.screen),
             Fighter(700, 270, 'Bandit', 20, 6, 1, self.screen)
         ]

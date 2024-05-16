@@ -30,14 +30,14 @@ def slice_horizontal(image_path, num_slices):
     return slices
 
 # Caminho da imagem
-image_path = "img/Martial Hero 2/Sprites/Death.png"
+image_path = "img/Monsters_Creatures_Fantasy/Skeleton/Attack.png"
 
 # Largura de cada fatia
-slice_width = 7  # Altere o valor para o tamanho desejado
+slice_width = 8  # Altere o valor para o tamanho desejado
 
 # Fatiamento horizontal
 slices = slice_horizontal(image_path, slice_width)
 
 # Salva cada fatia
 for i, slice_img in enumerate(slices):
-    slice_img.save(f"img/Martial Hero 2/Death/slice_{i}.png")
+    if i>5: slice_img.save(f"img/Skeleton/Attack/slice_{i}.png")

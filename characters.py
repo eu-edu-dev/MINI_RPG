@@ -9,16 +9,31 @@ GREEN = (0, 255, 0)
 image_cache = {}
 
 class FighterAnimation:
-    def __init__(self, screen, name, x, y, flip=False):
+    def __init__(self, screen, name, x, y, flip=False, **kwargs):
         self.screen = screen
         self.flip = flip
         self.name = name
         self.frame_index = 0
+        self.width = kwargs.get('width')
+        self.height = kwargs.get('height')
         self.set_cache()
         self.action = "Idle"
         self.update_time = pygame.time.get_ticks()
         self.image = self.get_next_frame()
         self.rect = self.image.get_rect(center=(x, y))
+
+
+    def get_dimensions(self, image=None):
+        if image:
+            width = image.get_width() * 3 if image.get_width() <= 67 else 200
+            height = image.get_height() * 3 if image.get_height() <= 67 else 200
+        if self.width:
+            width = self.width
+        if self.height:
+            height = self.height
+        
+        return (width, height)
+
 
     def set_cache(self):
         actions = ["Idle", "Attack", "Hurt", "Death"]
@@ -29,9 +44,7 @@ class FighterAnimation:
                 img_list = []
                 for file_name in sorted(os.listdir(path)):
                     image = pygame.image.load(f"{path}/{file_name}").convert_alpha()
-                    width = image.get_width() * 3 if image.get_width() <= 80 else 240
-                    height = image.get_height() * 3 if image.get_height() <= 80 else 240
-                    size = (width, height)
+                    size = self.get_dimensions(image)
                     img = pygame.transform.scale(image, size)
                     if self.flip:
                         img = pygame.transform.flip(img, True, False)
@@ -89,9 +102,9 @@ class FighterAnimation:
 
 # fighter class
 class Fighter(FighterAnimation):
-    def __init__(self, x, y, name, max_hp, strength, potions, screen, flip=False):
+    def __init__(self, x, y, name, max_hp, strength, potions, screen, flip=False, **kwargs):
         self.screen = screen
-        super().__init__(screen, name, x, y, flip)
+        super().__init__(screen, name, x, y, flip, **kwargs)
         self.name = name
         self.max_hp = max_hp
         self.hp = max_hp
@@ -99,7 +112,6 @@ class Fighter(FighterAnimation):
         self.start_potions = potions
         self.potions = potions
         self.alive = True
-        # 0:idle, 1:attack, 2:hurt, 3:dead
         self.update_time = pygame.time.get_ticks()
 
     def attack(self, target):

@@ -18,9 +18,9 @@ def slice_horizontal(image_path, width_crop, height_crop):
     # Fatiamento horizontal
 
     # Calcula as coordenadas da fatia
-    left = (width - (width_crop*1.15))/2
+    left = (width - (width_crop))/2
     upper = (height - height_crop)/2
-    right = (width + (width_crop*2))/2
+    right = (width )
     lower = (height + height_crop)/2
 
     # Corta a fatia
@@ -33,7 +33,7 @@ def slice_horizontal(image_path, width_crop, height_crop):
 
 
 # Caminho da imagem
-image_path = "img/Martial Hero 2/Death"
+image_path = "img/Skeleton/Attack"
 
 
 # Fatiamento horizontal
@@ -41,8 +41,9 @@ i = 0
 
 # Salva cada fatia
 for file_name in sorted(os.listdir(image_path)):
-    slice_img = slice_horizontal(f"{image_path}/{file_name}", 60, 60)
-    slice_img.save(f"{image_path}/{file_name}")
+    if i >= 6:
+        slice_img = slice_horizontal(f"{image_path}/{file_name}", 60, 60)
+        slice_img.save(f"{image_path}/{file_name}")
     i += 1
 
 # slice_img = slice_horizontal(f"{image_path}/slice_2.png", 100, 60)
