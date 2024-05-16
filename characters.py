@@ -29,8 +29,10 @@ class FighterAnimation:
                 img_list = []
                 for file_name in sorted(os.listdir(path)):
                     image = pygame.image.load(f"{path}/{file_name}").convert_alpha()
-                    size = (image.get_width() * 3, image.get_height() * 3)
-                    img =  pygame.transform.scale(image, size)
+                    width = image.get_width() * 3 if image.get_width() <= 80 else 240
+                    height = image.get_height() * 3 if image.get_height() <= 80 else 240
+                    size = (width, height)
+                    img = pygame.transform.scale(image, size)
                     if self.flip:
                         img = pygame.transform.flip(img, True, False)
                     img_list.append(img)

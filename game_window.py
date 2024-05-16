@@ -51,7 +51,8 @@ class MainGameGraphic:
         self.knight = Fighter(200, 260, 'Knight', 40, 10, 3, self.screen)
         self.knight.create_health_bar(100, position_y)
         self.opponents_list = [
-            Fighter(550, 270, 'Martial Hero 2', 20, 6, 1, self.screen, True),
+            Fighter(550, 250, 'Martial Hero 2', 20, 6, 1, self.screen, True),
+            # Fighter(600, 270, 'Bandit', 20, 6, 1, self.screen),
             Fighter(700, 270, 'Bandit', 20, 6, 1, self.screen)
         ]
         self.characters_list = self.opponents_list + [self.knight]
