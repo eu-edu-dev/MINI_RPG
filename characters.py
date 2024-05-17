@@ -117,7 +117,7 @@ class Fighter(FighterAnimation):
     def attack(self, target):
         super().attack()
         # deal damage to enemy
-        rand = random.randint(-5, 5)
+        rand = random.randint(-int(self.strength/3), int(self.strength/3))
         damage = self.strength + rand
         target.hp -= damage
         # run enemy hurt animation

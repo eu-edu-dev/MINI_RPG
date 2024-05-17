@@ -1,6 +1,7 @@
 import pygame
-import button
-from characters import *
+from button import Button
+from characters import Fighter, damage_text_group
+from level import LevelMixin
 
 RUNNING = 0
 DEFEATED = -1
@@ -11,11 +12,12 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 
 
-class MainGameGraphic:
+class MainGameGraphic(LevelMixin):
     def __init__(self):
         pygame.init()
         pygame.font.init()  # Initialize fonts
         self.create_window()
+        super().__init__(self.screen)
         self.load_images()
         self.create_characters()
         self.attack = False
@@ -43,17 +45,16 @@ class MainGameGraphic:
         self.victory_img = pygame.image.load('img/Icons/victory.png').convert_alpha()
         self.defeat_img = pygame.image.load('img/Icons/defeat.png').convert_alpha()
         self.sword_img = pygame.image.load('img/Icons/sword.png').convert_alpha()
+        self.hp_powerup_img = pygame.image.load('img/Icons/hp_powerup.png').convert_alpha()
+        self.strength_powerup_img = pygame.image.load('img/Icons/strength_powerup.png').convert_alpha()
 
         self.font = pygame.font.SysFont('Times New Roman', 26)
 
     def create_characters(self):
         position_y = self.screen_height - self.bottom_panel + 40
-        self.knight = Fighter(200, 260, 'Knight', 40, 10, 3, self.screen, width=300, heigth=300)
         self.knight.create_health_bar(100, position_y)
         self.opponents_list = [
-            Fighter(550, 284, 'Skeleton', 20, 6, 1, self.screen, True, width=120, height=120),
-            # Fighter(600, 270, 'Bandit', 20, 6, 1, self.screen),
-            Fighter(700, 270, 'Bandit', 20, 6, 1, self.screen)
+            self.martial_hero(1),
         ]
         self.characters_list = self.opponents_list + [self.knight]
         for index, opponent in enumerate(self.opponents_list):
@@ -67,7 +68,7 @@ class MainGameGraphic:
         self.draw_bg()
         self.draw_panel()
         self.create_buttons()
-        self.check_potions()
+        self.draw_buttons()
         self.load_characters()
         self.draw_healthbar()
         self.set_cursor()
@@ -89,13 +90,28 @@ class MainGameGraphic:
         self.screen.blit(img, (x, y))
 
     def create_buttons(self):
-        self.restart_button = button.Button(self.screen, 350, 120, self.restart_img, 120, 30)
-        self.potion_button = button.Button(self.screen, 100, self.screen_height - self.bottom_panel + 70, self.potion_img,
+        self.restart_button = Button(self.screen, 350, 120, self.restart_img, 120, 30)
+        self.potion_button = Button(self.screen, 100, self.screen_height - self.bottom_panel + 70, self.potion_img,
                                            64, 64)
+        self.strength_up_button = Button(
+            self.screen, 100, self.screen_height - self.bottom_panel + 70,
+            self.strength_powerup_img, 64, 64
+        )
+        self.hp_up_button = Button(
+            self.screen, 200, self.screen_height - self.bottom_panel + 70,
+            self.hp_powerup_img, 64, 64
+        )
 
     def draw_damage_text(self):
         damage_text_group.update()
         damage_text_group.draw(self.screen)
+
+    def draw_buttons(self):
+        if self.game_status == VICTORY:
+            self.hp_up_button.draw()
+            self.strength_up_button.draw()
+        else:
+            self.check_potions()
 
     def check_potions(self):
         potion = False
